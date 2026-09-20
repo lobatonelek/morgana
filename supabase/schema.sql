@@ -46,7 +46,8 @@ exception when duplicate_object then null; end $$;
 grant select,insert,update,delete on public.items,public.checklist,public.gifts,public.calendar_events to anon;
 grant usage,select on sequence public.items_id_seq to anon;
 
--- Realtime: necessário para o presente aparecer automaticamente em outro celular.
+-- Realtime: mantém inventário, checklist, presentes e calendário sincronizados entre dispositivos.
+do $$ begin alter publication supabase_realtime add table public.items; exception when duplicate_object then null; end $$;
 do $$ begin alter publication supabase_realtime add table public.gifts; exception when duplicate_object then null; end $$;
 do $$ begin alter publication supabase_realtime add table public.checklist; exception when duplicate_object then null; end $$;
 do $$ begin alter publication supabase_realtime add table public.calendar_events; exception when duplicate_object then null; end $$;
