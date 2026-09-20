@@ -38,3 +38,4 @@ Esta versão consolida as alterações aprovadas em 20/09/2026.
 - Checklist comprado entra automaticamente no inventário.
 - Presente reservado/comprado aparece na tela inicial até ser marcado como recebido.
 - Presente recebido entra automaticamente no inventário.
+- Deploy novo
