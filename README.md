@@ -1,41 +1,42 @@
-# Morgana Hub — Versão Final
+# Morgana Hub — Online
 
-Hub de enxoval e preparação para a chegada da Morgana.
+Hub de enxoval, presentes e organização para a chegada da Morgana.
 
-## O que esta versão inclui
-- Inventário com fraldas, roupas e demais itens.
-- Progresso da gestação calculado dinamicamente pela DPP de **17/11/2026** (40 semanas).
-- Checklist: ao clicar **Comprei**, o item sai da lista e entra no inventário.
-- Aba **Presente**: convidados podem reservar/comprar itens; presentes comprados aparecem na tela inicial até a família confirmar o recebimento; ao confirmar, entram no inventário.
-- Calendário com consultas, exames, tarefas, trabalho e outros compromissos, com data e horário.
-- Modo local via localStorage e modo compartilhado via Supabase.
+## Novidades desta versão
 
-## Deploy na Vercel
-- Framework: Vite
-- Build command: `npm run build`
-- Output directory: `dist`
-- Install command: `npm install`
+- Tema claro/escuro com preferência salva no navegador.
+- Calendário em destaque logo abaixo do progresso da gestação na tela inicial.
+- Sincronização em tempo real de inventário, checklist, presentes e calendário via Supabase.
+- Continua funcionando em modo local se o Supabase ainda não estiver configurado.
 
-## Para sincronizar Presentes/Calendário entre celulares
-1. Crie um projeto no Supabase.
-2. No **SQL Editor**, execute `supabase/schema.sql`.
-3. Na Vercel, adicione as variáveis:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY`
-4. Faça um novo deploy.
+## 1. Supabase
 
-Sem Supabase, o Hub continua funcionando, mas cada navegador mantém seus próprios dados. Isso significa que uma compra marcada por um convidado não chegará ao celular da família.
+1. Crie um projeto em https://supabase.com.
+2. Abra **SQL Editor** e execute todo o arquivo `supabase/schema.sql`.
+3. Em **Project Settings → API**, copie:
+   - **Project URL**
+   - **Publishable key** (ou anon key, se sua tela ainda usar essa nomenclatura)
 
-## Observação de privacidade
-O schema atual permite leitura e alteração anônima para que convidados possam marcar presentes sem login. Quem tiver o link poderá interagir com os dados. Se o Hub for compartilhado amplamente, a próxima evolução recomendada é adicionar autenticação/PIN para as áreas da família.
+## 2. Vercel
 
+No projeto do Morgana Hub, abra **Settings → Environment Variables** e crie:
 
-## Release final
-Esta versão consolida as alterações aprovadas em 20/09/2026.
+- `VITE_SUPABASE_URL` = Project URL do Supabase
+- `VITE_SUPABASE_PUBLISHABLE_KEY` = Publishable key do Supabase
 
-- DPP configurada: **17/11/2026**.
-- Calendário permanece como a última categoria do menu lateral.
-- Checklist comprado entra automaticamente no inventário.
-- Presente reservado/comprado aparece na tela inicial até ser marcado como recebido.
-- Presente recebido entra automaticamente no inventário.
-- Deploy novo
+Marque **Production**, **Preview** e **Development** para as duas variáveis. Depois faça um novo deploy.
+
+Quando estiver correto, o rodapé da barra lateral mostrará **“Sincronizado online”** e **“Supabase conectado · dados compartilhados”**.
+
+## 3. GitHub / Vercel
+
+O projeto usa Vite:
+
+- Framework Preset: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Root Directory: `./`
+
+## Observação de acesso
+
+A configuração atual permite acesso público aos dados via chave pública do projeto para que a lista de presentes funcione sem login. Use este Hub apenas para informações que vocês aceitam compartilhar com quem tiver o link. Não cadastre dados médicos sensíveis, documentos, telefones, endereços particulares ou outras informações privadas.
