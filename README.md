@@ -45,3 +45,10 @@ Use a branch `morgana.v3.online`, faça o push, teste o Preview da Vercel e só 
 ### Atualização do Supabase
 
 Depois de publicar a v3.4, execute novamente `supabase/schema.sql` no SQL Editor. Ele faz uma migração segura, adicionando `product_url` às tabelas `checklist`/`gifts` e criando `custom_recommendations` sem apagar os dados existentes.
+
+## v3.5
+- Aba Presente passa a refletir diretamente o Checklist, evitando divergência de contagem.
+- Recomendações podem ser ordenadas por Item, Temos, Referência/meta e Status.
+- Inventário ganhou filtro por tamanho e uma barra de filtros limpa, sem controle visual extra.
+- Calendário voltou ao layout com Agenda do mês e Próximos eventos empilhados na lateral.
+- Não há alteração de schema nesta versão; não é necessário rodar SQL novo no Supabase se a v3.4 já foi aplicada.
