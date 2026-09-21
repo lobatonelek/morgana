@@ -1,18 +1,47 @@
-# Morgana Hub — v3.2
+# Morgana Hub — v3.3
 
-Hub de enxoval e preparação para a chegada da Morgana.
+Hub de enxoval, presentes e preparação para a chegada da Morgana.
 
-## Integração entre Checklist, Presentes, Recomendações e Inventário
+## Mudanças da v3.3
 
-- **Adicionar desejo:** cria o item no Checklist e na lista de Presentes ao mesmo tempo.
-- **Comprei:** remove a pendência, retira o item da lista disponível para presentes e adiciona ao Inventário.
-- **Presente reservado/comprado:** deixa de aparecer como compra pendente no Checklist, evitando compra duplicada.
-- **Liberar presente:** devolve o item ao Checklist e à lista disponível.
-- **Recebemos:** adiciona ao Inventário e remove das pendências.
-- **Recomendações:** itens originalmente em falta são recalculados quando entram no Inventário.
+- Início simplificado: mantém gestação, calendário, estoque total e roupas catalogadas.
+- Presentes comprados/aguardando entrega aparecem logo abaixo do calendário.
+- Fraldas e roupas ficam lado a lado, com visualização rápida por tamanho/peça.
+- Inventário permite ordenar todas as colunas clicando no cabeçalho.
+- Recomendações em formato de lista, com **Temos**, **Faixa de referência** e status:
+  - Verde = Sobrando
+  - Amarelo = OK
+  - Vermelho = Falta
+- Checklist e Presentes usam a mesma lista lógica:
+  - adicionar no Checklist também adiciona em Presentes;
+  - comprar pela família remove das duas listas e adiciona ao Inventário;
+  - presente comprado por terceiro remove de Checklist e Presentes e aparece no Início aguardando entrega;
+  - confirmar recebimento adiciona ao Inventário e recalcula Recomendações.
+- Aba Presente mostra apenas itens ainda disponíveis.
+- Calendário mostra **Agenda do mês** e **Próximos eventos** com o mesmo padrão visual.
 
-## Modo online
+## Supabase / modo online
 
-Com `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` configuradas na Vercel, Inventário, Checklist, Presentes e Calendário são compartilhados via Supabase.
+Variáveis na Vercel:
 
-Execute `supabase/schema.sql` no SQL Editor do Supabase antes do primeiro uso online.
+```env
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+Execute `supabase/schema.sql` no SQL Editor do Supabase.
+
+## Deploy seguro
+
+Use a branch `morgana.v3.online`, faça o push, teste o Preview da Vercel e só depois faça merge na `main`.
+
+## Novidades v3.4
+
+- Checklist aceita um **link de exemplo do produto**; o mesmo link é exibido na lista de Presentes.
+- Recomendações agora têm o botão **Adicionar recomendação**.
+- Uma recomendação personalizada pode usar um item já existente no Inventário e comparar automaticamente o estoque atual com uma **meta definida pela família**.
+- Recomendações personalizadas ficam sincronizadas via Supabase.
+
+### Atualização do Supabase
+
+Depois de publicar a v3.4, execute novamente `supabase/schema.sql` no SQL Editor. Ele faz uma migração segura, adicionando `product_url` às tabelas `checklist`/`gifts` e criando `custom_recommendations` sem apagar os dados existentes.

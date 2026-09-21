@@ -8,16 +8,27 @@ create table if not exists public.items (
 
 create table if not exists public.checklist (
   id text primary key, name text not null, category text not null, quantity integer not null default 1,
-  priority text default 'Média', note text default '', size text default '', age text default '', unit text default 'unid.',
+  priority text default 'Média', note text default '', product_url text default '', size text default '', age text default '', unit text default 'unid.',
   created_at timestamptz default now()
 );
 
 create table if not exists public.gifts (
   id text primary key, name text not null, category text not null, quantity integer not null default 1,
   status text not null default 'available' check (status in ('available','purchased','received')),
-  buyer text default '', note text default '', purchased_at timestamptz, received_at timestamptz,
+  buyer text default '', note text default '', product_url text default '', purchased_at timestamptz, received_at timestamptz,
   created_at timestamptz default now()
 );
+
+
+
+create table if not exists public.custom_recommendations (
+  id text primary key, name text not null, category text default 'Todos', target integer not null default 1,
+  note text default '', created_at timestamptz default now()
+);
+
+-- Migração segura para projetos que já tinham as tabelas da versão anterior.
+alter table public.checklist add column if not exists product_url text default '';
+alter table public.gifts add column if not exists product_url text default '';
 
 create table if not exists public.calendar_events (
   id text primary key, title text not null, event_date date not null, event_time time,
@@ -29,6 +40,7 @@ alter table public.items enable row level security;
 alter table public.checklist enable row level security;
 alter table public.gifts enable row level security;
 alter table public.calendar_events enable row level security;
+alter table public.custom_recommendations enable row level security;
 
 do $$ begin
   create policy "public items all" on public.items for all to anon using (true) with check (true);
@@ -43,7 +55,12 @@ do $$ begin
   create policy "public calendar all" on public.calendar_events for all to anon using (true) with check (true);
 exception when duplicate_object then null; end $$;
 
-grant select,insert,update,delete on public.items,public.checklist,public.gifts,public.calendar_events to anon;
+
+do $$ begin
+  create policy "public custom recommendations all" on public.custom_recommendations for all to anon using (true) with check (true);
+exception when duplicate_object then null; end $$;
+
+grant select,insert,update,delete on public.items,public.checklist,public.gifts,public.calendar_events,public.custom_recommendations to anon;
 grant usage,select on sequence public.items_id_seq to anon;
 
 -- Realtime: mantém inventário, checklist, presentes e calendário sincronizados entre dispositivos.
@@ -51,3 +68,5 @@ do $$ begin alter publication supabase_realtime add table public.items; exceptio
 do $$ begin alter publication supabase_realtime add table public.gifts; exception when duplicate_object then null; end $$;
 do $$ begin alter publication supabase_realtime add table public.checklist; exception when duplicate_object then null; end $$;
 do $$ begin alter publication supabase_realtime add table public.calendar_events; exception when duplicate_object then null; end $$;
+
+do $$ begin alter publication supabase_realtime add table public.custom_recommendations; exception when duplicate_object then null; end $$;
